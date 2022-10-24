@@ -1,7 +1,7 @@
 import dash
 import requests
 
-import plotly.graph_objects as go # or plotly.express as px
+import plotly.graph_objects as go 
 import plotly.express as px
 import dash_bootstrap_components as dbc
 import pandas as pd
@@ -9,19 +9,49 @@ import pandas as pd
 from dash import html, dcc
 
 
-df = pd.read_csv('notebooks/data/countries_processed.csv')
+#df = pd.read_csv('countries.csv')
 
+### Data Collection
+# =======================================================================
+# World Stas
 url = "https://disease.sh/v3/covid-19/all"
 
 payload={}
 headers = {}
 
 response = requests.request("GET", url, headers=headers, data=payload)
+# return response in dictionary
 world_stats = response.json()
 
-#------------------------------------------------------------------------
-#Figures
-#df = df.style.format({'cases': "{:,.0f}", 'deaths': "{:,.0f}",'recovered': "{:,.0f}"})
+# =======================================================================
+# Countries
+
+def API_request(url:str):
+    """
+    Takes a url as an input, makes a request to the API, and returns a dataframe of the response
+    
+    :param url: the url of the API request
+    :type url: str
+    :return: A dataframe
+    """
+    payload = {}
+    headers = {}
+
+    response = requests.request("GET", url, headers=headers, data=payload)
+    data = response.json()
+    df=pd.json_normalize(data)
+    return df
+
+countries = API_request('https://disease.sh/v3/covid-19/countries')
+vac = API_request('https://disease.sh/v3/covid-19/vaccine/coverage/countries?lastdays=1&fullData=false')
+
+# Preprocessing
+vac_cols = vac.columns
+vac = vac.rename(columns={vac_cols[1]: 'vaccinations'})
+
+df = pd.merge(countries, vac, on="country")
+
+df['vaccination_percentage'] = (df['vaccinations'] / df['population']) * 100
 
 df['text'] = df['country'].astype(str) + '<br>' + \
     'Confirmed Cases ' + df['cases'].astype(str) + '<br>' + \
@@ -29,7 +59,8 @@ df['text'] = df['country'].astype(str) + '<br>' + \
     'Vaccines Distributed ' + df['vaccinations'].astype(str) + '<br>' + \
     'Deaths ' + df['deaths'].astype(str) 
 
-
+#------------------------------------------------------------------------
+### Figures
 
 fig1 = go.Figure(data=go.Choropleth(
     locations = df['countryInfo.iso3'],
@@ -74,7 +105,7 @@ fig3_plot = html.Div(id='fig3_plot')
 
 
 #------------------------------------------------------------------------
-# Dash
+### Dash
 
 app = dash.Dash(meta_tags=[{'name': 'viewport',
                 'content': 'width=device-width, initial-scale=2.0, maximum-scale=2.2, minimum-scale=0.5,'}],  external_stylesheets=[dbc.themes.ZEPHYR]
@@ -276,8 +307,8 @@ def barplot(fig3_name):
     return dcc.Graph(figure=fig)
 
 
-app.run_server(debug=True, use_reloader=True)  # Turn off reloader if inside Jupyter
+#app.run_server(debug=True, use_reloader=True)  # Turn off reloader if inside Jupyter
 
 
-# if __name__ == '__main__':
-#     app.run_server(debug=True)
+if __name__ == '__main__':
+    app.run_server(debug=True)
