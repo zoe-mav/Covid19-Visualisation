@@ -9,7 +9,7 @@ import pandas as pd
 from dash import html, dcc
 
 
-df = pd.read_csv('countries.csv')
+df = pd.read_csv('notebooks/data/countries_processed.csv')
 
 url = "https://disease.sh/v3/covid-19/all"
 
