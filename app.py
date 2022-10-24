@@ -182,7 +182,7 @@ app.layout = dbc.Container(
         html.P('''The following graphs have been made to provide some perspective on the ways data can be presented. On the left side, one can select between [cases, recovered, deaths,  
         vaccination_percentage] and the respective highest ranked countries will appear. Please note that the population has not been taken into consideration in the first 3 options, 
         therefore the results are misguided in the sense that population massively affects them.''',style={'textAlign':'justify', 'marginLeft' : '15px', 'marginRight': '15px'}),
-        html.P('''On the right side, one can select through the same options however, the number of those ia calculated per 1 Million people, thereby examining the same amount of people 
+        html.P('''On the right side, one can select through the same options however, the number of those is calculated per 1 Million people, thereby examining the same amount of people 
         and allowing for true comparison.''',style={'textAlign':'justify', 'marginLeft' : '15px', 'marginRight': '15px'}),
 
         html.Br(),
