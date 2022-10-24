@@ -6,15 +6,17 @@ In December 2019, a number of cases that pointed to a potential respiratory dise
 
 Since then, COVID-19 data has been made available in numerous APIs, for everyone to access and inform themselves. This repository accesses the [Disease.sh](https://github.com/disease-sh/API) open API and provides visualisations for global statistics, along with a guide to interpret them.
 
-## Data Collection - [Disease.sh](https://github.com/disease-sh/API) API
+## Data Collection 
 In short, Disease.sh allows for data collection from multiple sources in a single API. 
 
-For this project, 5 API calls were made:
+For this project, 3 API calls were made:
 - Global statistics: [https://disease.sh/v3/covid-19/all](https://disease.sh/v3/covid-19/all)
 - Countries (cases,deaths,etc): [https://disease.sh/v3/covid-19/countries](https://disease.sh/v3/covid-19/countries)
 - Countries Vaccine Coverage: [https://disease.sh/v3/covid-19/vaccine/coverage/countries?lastdays=1&fullData=false](https://disease.sh/v3/covid-19/vaccine/coverage/countries?lastdays=1&fullData=false)
-- States (cases,deaths,etc): [https://disease.sh/v3/covid-19/states](https://disease.sh/v3/covid-19/states)
-- States Vaccine Coverage: [https://disease.sh/v3/covid-19/vaccine/coverage/states?lastdays=1&fullData=False](https://disease.sh/v3/covid-19/vaccine/coverage/states?lastdays=1&fullData=False)
+
+Plus the data for all states from The Covid Tracking Project:
+- States (cases,deaths,etc): [https://covidtracking.com/data/download](https://covidtracking.com/data/download)
+
 
 ## Dashboard Deployment 
 The deployment of the dash app is made with [Heroku](http://heroku.com). 
