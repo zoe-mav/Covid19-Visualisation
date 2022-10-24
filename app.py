@@ -271,7 +271,7 @@ def barplot(fig3_name):
                      hover_data=['country'],color_continuous_scale='Blues')
         fig.layout.coloraxis.colorbar.title = 'vaccination'
 
-    fig.update_layout(yaxis={'visible': False, 'showticklabels': False}, xaxis={'visible': False, 'showticklabels': False})
+    fig.update_layout(yaxis={'visible': False, 'showticklabels': False})
 
     return dcc.Graph(figure=fig)
 
