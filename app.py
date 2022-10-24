@@ -59,6 +59,46 @@ df['text'] = df['country'].astype(str) + '<br>' + \
     'Vaccines Distributed ' + df['vaccinations'].astype(str) + '<br>' + \
     'Deaths ' + df['deaths'].astype(str) 
 
+# =======================================================================
+# Countries
+# TODO fix path
+st = pd.read_csv('notebooks/covid19 tracking data/all-states-history.csv')
+
+to_drop = [ 'deathConfirmed', 'deathIncrease', 'deathProbable',  'hospitalizedCumulative', 'hospitalizedCurrently', 'hospitalizedIncrease', 'inIcuCumulative',
+       'inIcuCurrently', 'negative', 'negativeIncrease', 'negativeTestsAntibody', 'negativeTestsPeopleAntibody', 'negativeTestsViral', 'onVentilatorCumulative', 'onVentilatorCurrently',
+       'positive', 'positiveCasesViral', 'positiveIncrease', 'positiveScore', 'positiveTestsAntibody', 'positiveTestsAntigen', 'positiveTestsPeopleAntibody', 'positiveTestsPeopleAntigen',
+       'positiveTestsViral',  'totalTestEncountersViral', 'totalTestEncountersViralIncrease', 'totalTestResults', 'totalTestResultsIncrease', 'totalTestsAntibody', 'totalTestsAntigen',
+       'totalTestsPeopleAntibody', 'totalTestsPeopleAntigen', 'totalTestsPeopleViral', 'totalTestsPeopleViralIncrease', 'totalTestsViral', 'totalTestsViralIncrease']
+
+st.drop(to_drop, axis=1, inplace=True)
+
+st1 = st[st['date'] == "2020-03-07"]
+st2 = st[st['date'] == "2020-04-07"]
+st3 = st[st['date'] == "2020-05-07"]
+st4 = st[st['date'] == "2020-06-07"]
+st5 = st[st['date'] == "2020-07-07"]
+st6 = st[st['date'] == "2020-08-07"]
+st7 = st[st['date'] == "2020-09-07"]
+st8 = st[st['date'] == "2020-10-07"]
+st9 = st[st['date'] == "2020-11-07"]
+st10 = st[st['date'] == "2020-12-07"]
+st11 = st[st['date'] == "2021-01-07"]
+st12 = st[st['date'] == "2021-02-07"]
+st13 = st[st['date'] == "2021-03-07"]
+
+frames = [st1, st2, st3, st4, st5, st6, st7, st8, st9, st10, st11, st12, st13]
+
+states = pd.concat(frames)
+
+states['date'] = pd.to_datetime(states['date'])
+states = states.sort_values('date', ascending=True)
+states['date'] = states['date'].dt.strftime('%m-%d-%Y')
+
+states['text'] = states['state'].astype(str) + '<br>' + \
+    'Hospitalizations ' + states['hospitalized'].astype(str) + '<br>' + \
+    'Recovered ' + states['recovered'].astype(str) + '<br>' + \
+    'Deaths ' + states['death'].astype(str) 
+
 #------------------------------------------------------------------------
 ### Figures
 
@@ -102,7 +142,14 @@ fig3_dropdown = html.Div([
     )])
 fig3_plot = html.Div(id='fig3_plot')
 
-
+fig4_names = ['death', 'hospitalized','recovered']
+fig4_dropdown = html.Div([
+    dcc.Dropdown(
+        id='fig4_dropdown',
+        options=[{'label': x, 'value': x} for x in fig4_names],
+        value='death'
+    )])
+fig4_plot = html.Div(id='fig4_plot')
 
 #------------------------------------------------------------------------
 ### Dash
@@ -228,6 +275,18 @@ app.layout = dbc.Container(
         html.Hr(),
         html.Br(),
 
+        html.H3('US States 2020-2021',style={'marginLeft' : '15px'}),
+        html.P('''A visualisation of the hospitalisations, recoveries and deaths from the early beginning in March 2020 till a year later.''',style={'textAlign':'justify', 'marginLeft' : '15px', 'marginRight': '15px'}),
+        html.Br(),
+
+        dbc.Row([
+            dbc.Col(html.Div([fig4_dropdown, fig4_plot]))
+            ]),
+
+        html.Br(),
+        html.Hr(),
+        html.Br(),
+
         html.H3('Resources',style={'marginLeft' : '15px'}),
         html.P('''[1] World, H. O. (2020). Timeline: WHO’s COVID-19 response. World Health Organization. 
         https://www.who.int/emergencies/diseases/novel-coronavirus-2019/interactive-timeline#event-51''',
@@ -236,7 +295,7 @@ app.layout = dbc.Container(
         a mathematical modelling study. The Lancet Infectious Diseases, 22(9), 1293–1302. https://doi.org/10.1016/S1473-3099(22)00320-6''',
         style={'textAlign':'justify', 'marginLeft' : '15px', 'marginRight': '15px'})
 
-
+        
 
 ],
 fluid=True,
@@ -306,8 +365,24 @@ def barplot(fig3_name):
 
     return dcc.Graph(figure=fig)
 
+@app.callback(
+dash.dependencies.Output('fig4_plot', 'children'),
+[dash.dependencies.Input('fig4_dropdown', 'value')])
+def update_output(fig4_name):
+    return maplot(fig4_name)
 
-#app.run_server(debug=True, use_reloader=True)  # Turn off reloader if inside Jupyter
+def maplot(fig4_name):
+    if fig4_name == 'death':
+        fig = px.choropleth(locations=states.state, locationmode="USA-states", color=states.death, scope="usa",
+                animation_frame=states.date, range_color=[0,50000], hover_name=states.text)
+    elif fig4_name == 'hospitalized':
+        fig = px.choropleth(locations=states.state, locationmode="USA-states", color=states.hospitalized, scope="usa",
+                animation_frame=states.date, range_color=[0,80000], hover_name=states.text)
+    elif fig4_name == 'recovered':
+        fig = px.choropleth(locations=states.state, locationmode="USA-states", color=states.recovered, scope="usa",
+                animation_frame=states.date, range_color=[0,2500000], hover_name=states.text)
+
+    return dcc.Graph(figure=fig)
 
 
 if __name__ == '__main__':
