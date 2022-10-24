@@ -103,8 +103,8 @@ app.layout = dbc.Container(
         html.P('Data was retrieved through the Disease.sh open API and preprocessed to allow for visualisation of COVID statistics over time.',
         style={'textAlign':'justify', 'marginLeft' : '15px', 'marginRight': '15px'}),
         
-        # html.Br(),
-        # html.Hr(),
+        html.Br(),
+        html.Hr(),
         html.Br(),
         
         html.H3('Global Statistics',style={'marginLeft' : '15px'}),
