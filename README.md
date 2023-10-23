@@ -19,7 +19,7 @@ Plus the data for all states from The Covid Tracking Project:
 
 
 ## Dashboard Deployment 
-The deployment of the dash app is made with [Heroku](http://heroku.com). 
+The deployment of the dash app is made with [Render](https://render.com/). 
 
 ## Running the App Localy
 1. Clone the repository.
