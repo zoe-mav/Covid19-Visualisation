@@ -1,5 +1,5 @@
 # Covid19-Visualisation
-#### available @ [https://covid19-visualisation-z.herokuapp.com](https://covid19-visualisation-z.herokuapp.com)
+#### available @ [https://covid19-visualisation.onrender.com/](https://covid19-visualisation.onrender.com/)
 
 ## Background
 In December 2019, a number of cases that pointed to a potential respiratory disease were reported in Wuhan, China. The World Health Organisation (WHO) made the first announcement of a novel coronavirus SARS-CoV-2 in January 2020 and 2 months later, a pandemic was declared. The COVID-19 pandemic has had a significant global impact, with more than 535M (+198k) cases and 6.31M (+463) deaths worldwide.
